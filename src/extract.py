@@ -1,5 +1,4 @@
 import requests
-import sys
 import json
 import time
 from datetime import datetime
@@ -16,7 +15,7 @@ def extract():
 
 
         timestamp = datetime.now().strftime("%d-%m-%Y")
-        file_name = f"../data/raw_btc_{timestamp}.json"
+        file_name = f"../data/raw_crypto_{timestamp}.json"
 
         with open(file_name, "w") as file:
             json.dump(data, file, indent=4)
@@ -25,12 +24,10 @@ def extract():
         return data
 
     except requests.exceptions.RequestException as e:
-        print(f"Failed to fetch API data. Error:  {e}")
-        sys.exit(1)
+        raise RuntimeError(f"[STAGE EXTRACT] Failed to fetch data from Coingecko API. Detail: {e}")
 
-    except ValueError:
-        print("API response is not valid JSON")
-        sys.exit(1)
+    except ValueError as e:
+        raise RuntimeError(f"[STAGE EXTRACT] Format data dari API bukan JSON yang valid. Detail: {e}")
 
 
 if __name__ == "__main__":
